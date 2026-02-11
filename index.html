@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arthur Command Center v2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: #0a0e15;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            background: rgba(15, 23, 35, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-tab {
+            padding: 8px 20px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            color: #22c55e;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-tab:hover {
+            background: rgba(34, 197, 94, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: #22c55e;
+            color: #0a0e15;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+        }
+
+        /* Agent Status Bar */
+        .agent-bar {
+            background: rgba(15, 23, 35, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 15px 20px;
+            display: flex;
+            gap: 15px;
+            border-bottom: 1px solid rgba(34, 197, 94, 0.1);
+        }
+
+        .agent-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            min-width: 180px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.2);
+        }
+
+        .agent-card.active {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(34, 197, 94, 0.4); }
+            to { box-shadow: 0 0 20px rgba(34, 197, 94, 0.8); }
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .agent-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #6b7280;
+            transition: all 0.3s ease;
+        }
+
+        .agent-card.active .agent-status {
+            background: #22c55e;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+        }
+
+        .agent-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #ffffff;
+        }
+
+        .agent-role {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 5px;
+        }
+
+        .agent-task {
+            font-size: 11px;
+            color: #22c55e;
+            font-style: italic;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            height: calc(100vh - 120px);
+        }
+
+        /* Live Activity Feed */
+        .activity-feed {
+            width: 350px;
+            background: rgba(15, 23, 35, 0.9);
+            border-right: 1px solid rgba(34, 197, 94, 0.1);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .feed-header {
+            color: #22c55e;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .activity-item {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .activity-time {
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        .activity-type {
+            font-size: 10px;
+            color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+
+        .activity-description {
+            font-size: 12px;
+            color: #e5e7eb;
+            line-height: 1.4;
+        }
+
+        /* Task Board */
+        .task-board {
+            flex: 1;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .board-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .board-title {
+            color: #22c55e;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .add-task-btn {
+            background: #22c55e;
+            color: #0a0e15;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .add-task-btn:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+        }
+
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            height: calc(100vh - 200px);
+        }
+
+        .kanban-column {
+            background: rgba(15, 23, 35, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .column-header {
+            color: #22c55e;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .task-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: grab;
+            transition: all 0.3s ease;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(34, 197, 94, 0.2);
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .task-card.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .task-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .task-description {
+            font-size: 11px;
+            color: #9ca3af;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .task-meta {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .task-priority {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .priority-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .priority-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .priority-low {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .task-assignee {
+            font-size: 10px;
+            color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Financials Tab */
+        .financials-content {
+            display: none;
+            flex: 1;
+            padding: 20px;
+        }
+
+        .financials-content.active {
+            display: block;
+        }
+
+        .financial-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 100%;
+        }
+
+        .financial-section {
+            background: rgba(15, 23, 35, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .section-header {
+            color: #22c55e;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .financial-item {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .financial-amount {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .financial-description {
+            color: #e5e7eb;
+            font-size: 12px;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 35, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(34, 197, 94, 0.3);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(34, 197, 94, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav-bar">
+        <div class="nav-tab active" onclick="showTab('dashboard')">DASHBOARD</div>
+        <div class="nav-tab" onclick="showTab('financials')">FINANCIALS</div>
+        <div class="nav-tab" onclick="showTab('leads')">LEADS</div>
+        <div class="nav-tab" onclick="showTab('actions')">ACTIONS</div>
+    </div>
+
+    <!-- Agent Status Bar -->
+    <div class="agent-bar">
+        <div class="agent-card active" id="arthur-agent">
+            <div class="agent-header">
+                <div class="agent-status"></div>
+                <div class="agent-name">ARTHUR</div>
+            </div>
+            <div class="agent-role">Squad Lead</div>
+            <div class="agent-task">Coordinating Operations</div>
+        </div>
+
+        <div class="agent-card" id="zillow-agent">
+            <div class="agent-header">
+                <div class="agent-status"></div>
+                <div class="agent-name">ZILLOW BOT</div>
+            </div>
+            <div class="agent-role">Acquisition Engine</div>
+            <div class="agent-task">Awaiting New Listings</div>
+        </div>
+
+        <div class="agent-card" id="ghost-agent">
+            <div class="agent-header">
+                <div class="agent-status"></div>
+                <div class="agent-name">GHOST</div>
+            </div>
+            <div class="agent-role">Content Writer</div>
+            <div class="agent-task">Preparing Twitter Posts</div>
+        </div>
+
+        <div class="agent-card active" id="admin-agent">
+            <div class="agent-header">
+                <div class="agent-status"></div>
+                <div class="agent-name">ADMIN</div>
+            </div>
+            <div class="agent-role">Real Estate Operations</div>
+            <div class="agent-task">Managing Asana Pipeline</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Tab Content -->
+        <div id="dashboard-content">
+            <!-- Live Activity Feed -->
+            <div class="activity-feed">
+                <div class="feed-header">
+                    <span>🔥</span>
+                    LIVE ACTIVITY FEED
+                </div>
+                <div id="activity-list">
+                    <!-- Activity items will be populated here -->
+                </div>
+            </div>
+
+            <!-- Task Board -->
+            <div class="task-board">
+                <div class="board-header">
+                    <div class="board-title">MISSION CONTROL</div>
+                    <button class="add-task-btn" onclick="addNewTask()">+ NEW TASK</button>
+                </div>
+
+                <div class="kanban-board">
+                    <div class="kanban-column" id="backlog">
+                        <div class="column-header">📋 BACKLOG</div>
+                        <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    </div>
+
+                    <div class="kanban-column" id="in-progress">
+                        <div class="column-header">🚧 IN PROGRESS</div>
+                        <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    </div>
+
+                    <div class="kanban-column" id="review">
+                        <div class="column-header">👁️ REVIEW</div>
+                        <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    </div>
+
+                    <div class="kanban-column" id="done">
+                        <div class="column-header">✅ DONE</div>
+                        <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financials Tab Content -->
+        <div id="financials-content" class="financials-content">
+            <div class="financial-grid">
+                <div class="financial-section">
+                    <div class="section-header">💳 LIVE CHARGES</div>
+                    <div id="charges-feed">
+                        <!-- Tiller charges will populate here -->
+                    </div>
+                </div>
+
+                <div class="financial-section">
+                    <div class="section-header">💰 REVENUE STREAM</div>
+                    <div id="revenue-feed">
+                        <!-- Revenue items will populate here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let tasks = [];
+        let activities = [];
+        let draggedElement = null;
+
+        // Navigation
+        function showTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('#dashboard-content, #financials-content').forEach(content => {
+                content.style.display = 'none';
+                content.classList.remove('active');
+            });
+
+            // Activate clicked tab
+            event.target.classList.add('active');
+
+            if (tabName === 'dashboard') {
+                document.getElementById('dashboard-content').style.display = 'flex';
+            } else if (tabName === 'financials') {
+                document.getElementById('financials-content').style.display = 'block';
+                document.getElementById('financials-content').classList.add('active');
+                loadFinancialData();
+            }
+        }
+
+        // Agent Management
+        function toggleAgent(agentId, isActive) {
+            const agentCard = document.getElementById(agentId);
+            if (isActive) {
+                agentCard.classList.add('active');
+            } else {
+                agentCard.classList.remove('active');
+            }
+        }
+
+        // Activity Feed
+        function addActivity(type, description) {
+            const activity = {
+                id: Date.now(),
+                type: type,
+                description: description,
+                timestamp: new Date()
+            };
+
+            activities.unshift(activity);
+            renderActivityFeed();
+        }
+
+        function renderActivityFeed() {
+            const activityList = document.getElementById('activity-list');
+            activityList.innerHTML = activities.slice(0, 20).map(activity => `
+                <div class="activity-item">
+                    <div class="activity-header">
+                        <span class="activity-time">${activity.timestamp.toLocaleTimeString()}</span>
+                        <span class="activity-type">${activity.type}</span>
+                    </div>
+                    <div class="activity-description">${activity.description}</div>
+                </div>
+            `).join('');
+        }
+
+        // Task Management
+        function loadTasks() {
+            // This would normally fetch from your board-data.json
+            // For now, let's load some sample tasks
+            tasks = [
+                {
+                    id: 'task-001',
+                    title: 'Second Brain System',
+                    description: 'Organize all information Luke shares into categorized knowledge base',
+                    column: 'in-progress',
+                    priority: 'high',
+                    assignee: 'Arthur'
+                },
+                {
+                    id: 'task-002',
+                    title: 'Travel Refunds Processing',
+                    description: 'Handle JSX flight and Vegas hotel refund requests',
+                    column: 'in-progress',
+                    priority: 'high',
+                    assignee: 'Arthur'
+                },
+                {
+                    id: 'task-003',
+                    title: 'Crypto Trading Monitor',
+                    description: 'Paper trading system with automated monitoring',
+                    column: 'in-progress',
+                    priority: 'medium',
+                    assignee: 'Zillow Bot'
+                },
+                {
+                    id: 'task-004',
+                    title: 'Go High Level Integration',
+                    description: 'Set up SMS monitoring and management',
+                    column: 'backlog',
+                    priority: 'medium',
+                    assignee: 'Admin'
+                }
+            ];
+            renderTasks();
+        }
+
+        function renderTasks() {
+            // Clear all columns
+            document.querySelectorAll('.task-list').forEach(list => list.innerHTML = '');
+
+            // Populate tasks
+            tasks.forEach(task => {
+                const taskElement = createTaskElement(task);
+                const column = document.getElementById(task.column)?.querySelector('.task-list');
+                if (column) {
+                    column.appendChild(taskElement);
+                }
+            });
+        }
+
+        function createTaskElement(task) {
+            const taskDiv = document.createElement('div');
+            taskDiv.className = 'task-card';
+            taskDiv.draggable = true;
+            taskDiv.dataset.taskId = task.id;
+            taskDiv.ondragstart = drag;
+
+            const priorityClass = `priority-${task.priority}`;
+
+            taskDiv.innerHTML = `
+                <div class="task-title">${task.title}</div>
+                <div class="task-description">${task.description}</div>
+                <div class="task-meta">
+                    <span class="task-priority ${priorityClass}">${task.priority.toUpperCase()}</span>
+                    <span class="task-assignee">${task.assignee}</span>
+                </div>
+            `;
+
+            taskDiv.onclick = () => openTaskModal(task);
+            return taskDiv;
+        }
+
+        function openTaskModal(task) {
+            alert(`Task: ${task.title}\n\nDescription: ${task.description}\n\nPriority: ${task.priority}\nAssignee: ${task.assignee}`);
+        }
+
+        // Drag and Drop
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            draggedElement = ev.target;
+            ev.target.classList.add('dragging');
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            if (draggedElement) {
+                const column = ev.target.closest('.kanban-column');
+                const taskList = column.querySelector('.task-list');
+                
+                if (taskList) {
+                    taskList.appendChild(draggedElement);
+                    
+                    // Update task column in data
+                    const taskId = draggedElement.dataset.taskId;
+                    const task = tasks.find(t => t.id === taskId);
+                    if (task) {
+                        const oldColumn = task.column;
+                        task.column = column.id;
+                        addActivity('TASK', `Moved "${task.title}" from ${oldColumn.toUpperCase()} to ${task.column.toUpperCase()}`);
+                    }
+                }
+                
+                draggedElement.classList.remove('dragging');
+                draggedElement = null;
+            }
+        }
+
+        function addNewTask() {
+            const title = prompt('Task title:');
+            if (title) {
+                const description = prompt('Task description:') || '';
+                const priority = prompt('Priority (high/medium/low):') || 'medium';
+                const assignee = prompt('Assignee:') || 'Arthur';
+
+                const newTask = {
+                    id: `task-${Date.now()}`,
+                    title: title,
+                    description: description,
+                    column: 'backlog',
+                    priority: priority,
+                    assignee: assignee
+                };
+
+                tasks.push(newTask);
+                renderTasks();
+                addActivity('CREATE', `New task created: "${title}"`);
+            }
+        }
+
+        // Financial Data
+        function loadFinancialData() {
+            // Sample financial data - this would connect to Tiller API
+            const charges = [
+                { amount: '-$87.50', description: 'Uber Ride to Airport', card: 'Chase Sapphire', time: '2:34 PM' },
+                { amount: '-$1,250.00', description: 'Office Rent Payment', card: 'Business Platinum', time: '1:15 PM' },
+                { amount: '-$45.99', description: 'Spotify Premium Family', card: 'Chase Sapphire', time: '12:05 PM' },
+                { amount: '-$2,100.00', description: 'Marketing Campaign', card: 'Business Platinum', time: '10:30 AM' }
+            ];
+
+            const revenue = [
+                { amount: '+$8,500.00', description: 'LL Ventures Deal Close', source: 'Business Account', time: '3:45 PM' },
+                { amount: '+$1,200.00', description: 'Consulting Payment', source: 'Chase Business', time: '11:20 AM' },
+                { amount: '+$850.00', description: 'Investment Dividend', source: 'Schwab Account', time: '9:15 AM' }
+            ];
+
+            renderFinancialData(charges, revenue);
+        }
+
+        function renderFinancialData(charges, revenue) {
+            const chargesFeed = document.getElementById('charges-feed');
+            const revenueFeed = document.getElementById('revenue-feed');
+
+            chargesFeed.innerHTML = charges.map(charge => `
+                <div class="financial-item">
+                    <div>
+                        <div class="financial-amount" style="color: #ef4444;">${charge.amount}</div>
+                        <div class="financial-description">${charge.description}</div>
+                        <div class="financial-description">${charge.card} • ${charge.time}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            revenueFeed.innerHTML = revenue.map(rev => `
+                <div class="financial-item">
+                    <div>
+                        <div class="financial-amount">${rev.amount}</div>
+                        <div class="financial-description">${rev.description}</div>
+                        <div class="financial-description">${rev.source} • ${rev.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Agent Proactive Features
+        function simulateAgentActivity() {
+            const activities = [
+                { agent: 'arthur-agent', type: 'COORD', desc: 'Optimizing workflow priorities' },
+                { agent: 'zillow-agent', type: 'SCRAPE', desc: 'Found 3 new Section 8 properties' },
+                { agent: 'ghost-agent', type: 'CONTENT', desc: 'Generated Instagram post draft' },
+                { agent: 'admin-agent', type: 'ADMIN', desc: 'Updated 5 Asana tasks' }
+            ];
+
+            setInterval(() => {
+                const activity = activities[Math.floor(Math.random() * activities.length)];
+                addActivity(activity.type, activity.desc);
+                
+                // Randomly activate agents
+                if (Math.random() > 0.7) {
+                    toggleAgent(activity.agent, true);
+                    setTimeout(() => toggleAgent(activity.agent, false), 3000);
+                }
+            }, 15000);
+        }
+
+
+        // Load real data from data.json
+        async function loadRealData() {
+            try {
+                const response = await fetch('./data.json?v=' + Date.now());
+                const data = await response.json();
+                
+                // Update tasks with real data
+                if (data.tasks) {
+                    tasks = data.tasks;
+                    renderTasks();
+                }
+                
+                // Update activities with real data
+                if (data.activities) {
+                    activities = data.activities.map(activity => ({
+                        id: Date.now() + Math.random(),
+                        type: activity.type,
+                        description: activity.description,
+                        timestamp: new Date(activity.timestamp)
+                    }));
+                    renderActivityFeed();
+                }
+                
+                // Update agent status
+                if (data.agents) {
+                    updateAgents(data.agents);
+                }
+                
+                // Update financial data
+                if (data.financial) {
+                    renderFinancialData(data.financial.charges, data.financial.revenue);
+                }
+                
+                console.log('✅ Real data loaded successfully');
+            } catch (error) {
+                console.error('❌ Error loading real data:', error);
+                // Fall back to sample data if needed
+            }
+        }
+        
+        function updateAgents(agentData) {
+            const agentMap = {
+                'arthur': 'arthur-agent',
+                'zillow-bot': 'zillow-agent', 
+                'ghost': 'ghost-agent',
+                'admin': 'admin-agent'
+            };
+            
+            Object.keys(agentData).forEach(agentKey => {
+                const agent = agentData[agentKey];
+                const elementId = agentMap[agentKey];
+                const element = document.getElementById(elementId);
+                
+                if (element) {
+                    const taskElement = element.querySelector('.agent-task');
+                    if (taskElement) {
+                        taskElement.textContent = agent.task;
+                    }
+                    
+                    if (agent.active) {
+                        element.classList.add('active');
+                    } else {
+                        element.classList.remove('active');
+                    }
+                }
+            });
+        }
+        
+        // Refresh data every 5 minutes
+        setInterval(loadRealData, 5 * 60 * 1000);
+
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRealData(); // Load real data immediately
+            loadTasks();
+            addActivity('SYSTEM', 'Arthur Command Center v2 initialized');
+            addActivity('COORD', 'All agents standing by for orders');
+            simulateAgentActivity();
+        });
+    </script>
+</body>
+</html>

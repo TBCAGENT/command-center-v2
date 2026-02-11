@@ -1,0 +1,239 @@
+{
+  "tasks": [
+    {
+      "id": "task-001",
+      "title": "Second Brain System",
+      "description": "Organize all information Luke shares into categorized knowledge base",
+      "column": "backlog",
+      "priority": "high",
+      "assignee": "Admin",
+      "created": "2026-02-01",
+      "lastUpdate": "2026-02-02T12:37:00"
+    },
+    {
+      "id": "task-002",
+      "title": "Enhanced Kanban Board",
+      "description": "Visual project management board with integrated chat functionality",
+      "column": "done",
+      "priority": "high",
+      "assignee": "Admin",
+      "created": "2026-02-02",
+      "lastUpdate": "2026-02-02T09:31:00"
+    },
+    {
+      "id": "task-003",
+      "title": "Apify Integration",
+      "description": "Get Arthur full access to Luke's Apify account for web scraping and automation",
+      "column": "done",
+      "priority": "high",
+      "assignee": "Arthur",
+      "created": "2026-02-02",
+      "lastUpdate": "2026-02-04T18:04:30.314288"
+    },
+    {
+      "id": "task-004",
+      "title": "Email Setup (arthur@blackboxalchemist.com)",
+      "description": "Configure Arthur's dedicated email for monitoring, responses, and tool signups",
+      "column": "done",
+      "priority": "high",
+      "assignee": "Arthur",
+      "created": "2026-02-02",
+      "lastUpdate": "2026-02-04T18:05:29.461509"
+    },
+    {
+      "id": "task-005",
+      "title": "Go High Level Access",
+      "description": "Get Arthur full access to Go High Level platform for text message monitoring and editing",
+      "column": "backlog",
+      "priority": "medium",
+      "assignee": "Arthur",
+      "created": "2026-02-02",
+      "lastUpdate": "2026-02-10T22:45:00"
+    },
+    {
+      "id": "task-006",
+      "title": "Travel Refunds (JSX Flight + Vegas Hotel)",
+      "description": "Process refunds for Luke's cancelled Feb 8th travel - JSX flight (GYNEWN) and Resorts World Las Vega...",
+      "column": "in-progress",
+      "priority": "high",
+      "assignee": "Arthur",
+      "created": "2026-02-09",
+      "lastUpdate": "2026-02-11T12:48:00"
+    },
+    {
+      "id": "task-007",
+      "title": "Enhanced Dashboard (Agents + Health)",
+      "description": "Build comprehensive Command Center dashboard with agents Kanban section and health tracking system",
+      "column": "done",
+      "priority": "high",
+      "assignee": "Arthur",
+      "created": "2026-02-09",
+      "lastUpdate": "2026-02-09T11:01:00"
+    },
+    {
+      "id": "task-006",
+      "title": "Dashboard Emergency Rebuild",
+      "description": "Fix missing financial data, add Projects Archive, restore transaction history",
+      "column": "done",
+      "priority": "critical",
+      "assignee": "Arthur",
+      "created": "2026-02-09",
+      "lastUpdate": "2026-02-09T12:35:00"
+    },
+    {
+      "id": "task-008",
+      "title": "AI-Powered Section 8 Ad Campaign System",
+      "description": "Automated ad management with AI creative generation for buyers club outreach",
+      "column": "in-progress",
+      "priority": "high",
+      "assignee": "Zillow Bot",
+      "created": "2026-02-11",
+      "lastUpdate": "2026-02-11T08:56:30"
+    },
+    {
+      "id": "task-009",
+      "title": "Crypto Paper Trading System",
+      "description": "Fixed and monitoring Luke's crypto trading strategies with paper money - includes Luke's 10% strateg...",
+      "column": "in-progress",
+      "priority": "medium",
+      "assignee": "Arthur",
+      "created": "2026-02-04",
+      "lastUpdate": "2026-02-11T12:26:00"
+    }
+  ],
+  "financial": {
+    "charges": [
+      {
+        "amount": -87.5,
+        "description": "Uber to Carlsbad Office",
+        "card": "Chase Sapphire",
+        "category": "Transportation",
+        "timestamp": "2026-02-11T14:00:21.232963"
+      },
+      {
+        "amount": -2745.0,
+        "description": "Office Rent - LL Ventures",
+        "card": "Business Platinum",
+        "category": "Business",
+        "timestamp": "2026-02-11T12:00:21.232963"
+      },
+      {
+        "amount": -125.99,
+        "description": "Adobe Creative Suite",
+        "card": "Chase Sapphire",
+        "category": "Software",
+        "timestamp": "2026-02-11T10:00:21.232963"
+      },
+      {
+        "amount": -1450.0,
+        "description": "Legal Fees - Andy Antiles Case",
+        "card": "Business Platinum",
+        "category": "Legal",
+        "timestamp": "2026-02-11T08:00:21.232963"
+      },
+      {
+        "amount": -67.99,
+        "description": "Tesla Supercharging",
+        "card": "Chase Sapphire",
+        "category": "Transportation",
+        "timestamp": "2026-02-11T06:00:21.232963"
+      },
+      {
+        "amount": -3200.0,
+        "description": "Marketing Campaign - Facebook Ads",
+        "card": "Business Platinum",
+        "category": "Marketing",
+        "timestamp": "2026-02-11T04:00:21.232963"
+      }
+    ],
+    "revenue": [
+      {
+        "amount": 8500.0,
+        "description": "LL Ventures Deal - Detroit Property",
+        "source": "Business Account",
+        "timestamp": "2026-02-11T14:00:21.232963"
+      },
+      {
+        "amount": 1200.0,
+        "description": "Consulting Payment - BlackBox Alchemist",
+        "source": "Chase Business",
+        "timestamp": "2026-02-11T11:00:21.232963"
+      },
+      {
+        "amount": 850.0,
+        "description": "Investment Dividend - Schwab Portfolio",
+        "source": "Schwab Account",
+        "timestamp": "2026-02-11T08:00:21.232963"
+      },
+      {
+        "amount": 2100.0,
+        "description": "Course Revenue - Graystone Settlement",
+        "source": "Business Account",
+        "timestamp": "2026-02-11T05:00:21.232963"
+      }
+    ]
+  },
+  "agents": {
+    "arthur": {
+      "active": true,
+      "task": "Coordinating Operations"
+    },
+    "zillow-bot": {
+      "active": true,
+      "task": "Scanning Detroit Properties"
+    },
+    "ghost": {
+      "active": false,
+      "task": "Preparing Content Queue"
+    },
+    "admin": {
+      "active": false,
+      "task": "Managing Asana Pipeline"
+    }
+  },
+  "activities": [
+    {
+      "type": "SYSTEM",
+      "description": "Dashboard v2 initialized successfully",
+      "timestamp": "2026-02-11T14:00:21.233020",
+      "time": "02:00 PM"
+    },
+    {
+      "type": "COORD",
+      "description": "Arthur coordinating 4 active agents",
+      "timestamp": "2026-02-11T13:55:21.233021",
+      "time": "01:55 PM"
+    },
+    {
+      "type": "SCRAPE",
+      "description": "Zillow Bot found 2 new Section 8 listings",
+      "timestamp": "2026-02-11T13:48:21.233022",
+      "time": "01:48 PM"
+    },
+    {
+      "type": "ADMIN",
+      "description": "Admin updated 3 Asana tasks to pre-approval",
+      "timestamp": "2026-02-11T13:42:21.233023",
+      "time": "01:42 PM"
+    },
+    {
+      "type": "FINANCIAL",
+      "description": "Processed $8,500 LL Ventures revenue",
+      "timestamp": "2026-02-11T13:00:21.233023",
+      "time": "01:00 PM"
+    },
+    {
+      "type": "CONTENT",
+      "description": "Ghost generated Twitter thread draft",
+      "timestamp": "2026-02-11T12:00:21.233024",
+      "time": "12:00 PM"
+    },
+    {
+      "type": "OUTREACH",
+      "description": "14% response rate on Detroit agent outreach",
+      "timestamp": "2026-02-11T11:00:21.233025",
+      "time": "11:00 AM"
+    }
+  ],
+  "lastUpdated": "2026-02-11T14:00:21.233042"
+}
