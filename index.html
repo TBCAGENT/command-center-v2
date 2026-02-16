@@ -3,947 +3,812 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arthur Command Center v2</title>
+    <title>Arthur | Your Favorite Operator You've Never Met... Yet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
         }
-
+        
         body {
-            background: #0a0e15;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
             color: #ffffff;
-            overflow: hidden;
+            background: #0a0a0a;
+            overflow-x: hidden;
         }
-
-        /* Navigation */
-        .nav-bar {
-            background: rgba(15, 23, 35, 0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(34, 197, 94, 0.2);
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            gap: 30px;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
-
-        .nav-tab {
-            padding: 8px 20px;
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 8px;
-            color: #22c55e;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .nav-tab:hover {
-            background: rgba(34, 197, 94, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .nav-tab.active {
-            background: #22c55e;
-            color: #0a0e15;
-        }
-
-        /* Agent Status Bar */
-        .agent-bar {
-            background: rgba(15, 23, 35, 0.8);
-            backdrop-filter: blur(20px);
-            padding: 15px 20px;
-            display: flex;
-            gap: 15px;
-            border-bottom: 1px solid rgba(34, 197, 94, 0.1);
-        }
-
-        .agent-card {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 12px;
-            padding: 15px;
-            min-width: 180px;
-            position: relative;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .agent-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .agent-card.active {
-            border-color: #22c55e;
-            background: rgba(34, 197, 94, 0.1);
-        }
-
-        .agent-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .agent-status {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #6b7280;
-            transition: all 0.3s ease;
-        }
-
-        .agent-card.active .agent-status {
-            background: #22c55e;
-        }
-
-        .agent-name {
-            font-weight: 600;
-            font-size: 16px;
-            color: #ffffff;
-        }
-
-        .agent-role {
-            font-size: 12px;
-            color: #9ca3af;
-            margin-bottom: 5px;
-        }
-
-        .agent-task {
-            font-size: 11px;
-            color: #22c55e;
-            font-style: italic;
-        }
-
-        /* Main Content */
-        .main-content {
-            display: flex;
-            min-height: calc(100vh - 120px);
-        }
-
-        /* Live Activity Feed */
-        .activity-feed {
-            width: 350px;
-            background: rgba(15, 23, 35, 0.9);
-            border-right: 1px solid rgba(34, 197, 94, 0.1);
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .feed-header {
-            color: #22c55e;
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .activity-item {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .activity-item:hover {
-            background: rgba(30, 41, 59, 0.6);
-            border-color: rgba(34, 197, 94, 0.4);
-        }
-
-        .activity-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        .activity-time {
-            font-size: 10px;
-            color: #9ca3af;
-        }
-
-        .activity-type {
-            font-size: 10px;
-            color: #22c55e;
-            background: rgba(34, 197, 94, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: auto;
-        }
-
-        .activity-description {
-            font-size: 12px;
-            color: #e5e7eb;
-            line-height: 1.4;
-        }
-
-        /* Task Board */
-        .task-board {
-            flex: 1;
-            padding: 20px;
-            overflow: hidden;
-        }
-
-        .board-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .board-title {
-            color: #22c55e;
-            font-weight: 600;
-            font-size: 18px;
-        }
-
-        .add-task-btn {
-            background: #22c55e;
-            color: #0a0e15;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .add-task-btn:hover {
-            background: #16a34a;
-            transform: translateY(-2px);
-        }
-
-        .kanban-board {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            min-height: calc(100vh - 200px);
-        }
-
-        .kanban-column {
-            background: rgba(15, 23, 35, 0.6);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            border-radius: 12px;
-            padding: 15px;
-            overflow-y: auto;
-        }
-
-        .column-header {
-            color: #22c55e;
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 15px;
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             text-align: center;
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
         }
-
-        .task-card {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
-            cursor: grab;
-            transition: all 0.3s ease;
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.3;
         }
-
-        .task-card:hover {
-            transform: translateY(-1px);
-            border-color: rgba(34, 197, 94, 0.4);
-        }
-
-        .task-card.dragging {
-            opacity: 0.5;
-            transform: rotate(5deg);
-        }
-
-        .task-title {
-            font-weight: 600;
-            font-size: 13px;
-            color: #ffffff;
-            margin-bottom: 5px;
-        }
-
-        .task-description {
-            font-size: 11px;
-            color: #9ca3af;
-            line-height: 1.4;
-            margin-bottom: 8px;
-        }
-
-        .task-meta {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-        }
-
-        .task-priority {
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 500;
-        }
-
-        .priority-high {
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-        }
-
-        .priority-medium {
-            background: rgba(245, 158, 11, 0.2);
-            color: #f59e0b;
-        }
-
-        .priority-low {
-            background: rgba(34, 197, 94, 0.2);
-            color: #22c55e;
-        }
-
-        .task-assignee {
-            font-size: 10px;
-            color: #22c55e;
-            background: rgba(34, 197, 94, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        /* Financials Tab */
-        .financials-content {
-            display: none;
-            flex: 1;
-            padding: 20px;
-        }
-
-        .financials-content.active {
+        
+        .emoji-large {
+            font-size: 4rem;
+            margin-bottom: 20px;
             display: block;
         }
-
-        .financial-grid {
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero .subtitle {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .video-placeholder {
+            background: #000;
+            border-radius: 15px;
+            padding: 60px;
+            margin: 40px 0;
+            border: 3px solid #667eea;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .video-placeholder h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .video-placeholder p {
+            color: #cccccc;
+            font-size: 1.1rem;
+        }
+        
+        /* CTA Buttons */
+        .cta-button {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
+        }
+        
+        /* Main Content */
+        .main-content {
+            background: #0a0a0a;
+            padding: 80px 0;
+        }
+        
+        .section {
+            margin: 80px 0;
+            text-align: center;
+        }
+        
+        .section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .section h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 40px 0 20px 0;
+            color: #ff6b6b;
+        }
+        
+        .section p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #cccccc;
+        }
+        
+        /* Stats Section */
+        .stats {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            padding: 80px 0;
+            margin: 80px 0;
+            border-radius: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 30px;
+        }
+        
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #fff;
+            display: block;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .stat-label {
+            font-size: 1.3rem;
+            color: #e0e0e0;
+            font-weight: 600;
+        }
+        
+        /* Luke's Story Section */
+        .luke-story {
+            background: #111111;
+            padding: 80px 0;
+            border-radius: 20px;
+            margin: 80px 0;
+        }
+        
+        .luke-story ul {
+            text-align: left;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .luke-story li {
+            font-size: 1.2rem;
+            margin: 20px 0;
+            color: #e0e0e0;
+            list-style: none;
+            position: relative;
+            padding-left: 40px;
+        }
+        
+        .luke-story li::before {
+            content: "🏆";
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            margin: 80px 0;
+        }
+        
+        .testimonial {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 40px;
+            margin: 30px 0;
+            border-radius: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+        
+        .testimonial p {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        
+        .testimonial .author {
+            font-size: 1.1rem;
+            color: #e0e0ff;
+            font-weight: 500;
+        }
+        
+        /* Comparison Section */
+        .comparison {
+            margin: 80px 0;
+        }
+        
+        .comparison-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            height: 100%;
+            gap: 40px;
+            margin: 40px 0;
         }
-
-        .financial-section {
-            background: rgba(15, 23, 35, 0.6);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            border-radius: 12px;
-            padding: 20px;
+        
+        .old-way, .new-way {
+            padding: 40px;
+            border-radius: 20px;
+            text-align: left;
         }
-
-        .section-header {
-            color: #22c55e;
+        
+        .old-way {
+            background: linear-gradient(135deg, #ff416c, #ff4757);
+        }
+        
+        .new-way {
+            background: linear-gradient(135deg, #00d2d3, #54a0ff);
+        }
+        
+        .old-way h3, .new-way h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+        
+        .old-way ul, .new-way ul {
+            padding: 0;
+            list-style: none;
+        }
+        
+        .old-way li, .new-way li {
+            margin: 15px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+        
+        .old-way li::before {
+            content: "❌";
+            position: absolute;
+            left: 0;
+        }
+        
+        .new-way li::before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+        
+        .comparison-footer {
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+        
+        .old-way .comparison-footer {
+            color: #ffcccc;
+        }
+        
+        .new-way .comparison-footer {
+            color: #ccffff;
+        }
+        
+        /* Features Section */
+        .features {
+            background: #0f0f0f;
+            padding: 80px 0;
+            border-radius: 20px;
+            margin: 80px 0;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 50px;
+            margin-top: 50px;
+        }
+        
+        .feature-item {
+            text-align: left;
+        }
+        
+        .feature-item h4 {
+            font-size: 1.5rem;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .feature-item ul {
+            padding: 0;
+            list-style: none;
+        }
+        
+        .feature-item li {
+            margin: 15px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #e0e0e0;
+            font-size: 1.1rem;
+        }
+        
+        .feature-item li::before {
+            content: "🔥";
+            position: absolute;
+            left: 0;
+        }
+        
+        /* Guarantee Section */
+        .guarantee {
+            background: linear-gradient(135deg, #ffd700, #ffb347);
+            color: #000;
+            padding: 60px;
+            border-radius: 20px;
+            margin: 80px 0;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.4);
+        }
+        
+        .guarantee h2 {
+            color: #000;
+            margin-bottom: 30px;
+        }
+        
+        .guarantee p {
+            color: #333;
             font-weight: 600;
-            font-size: 16px;
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 80px 0;
+            border-radius: 20px;
+            margin: 80px 0;
+            text-align: center;
+        }
+        
+        .pricing h2 {
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-card {
+            background: #ffffff;
+            color: #333;
+            padding: 60px;
+            border-radius: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+        }
+        
+        .price {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .price-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .pricing-features {
+            text-align: left;
+            margin: 30px 0;
+        }
+        
+        .pricing-features li {
+            margin: 15px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.1rem;
+        }
+        
+        .pricing-features li::before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+        
+        /* FAQ Section */
+        .faq {
+            margin: 80px 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .faq-item {
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .faq-question {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ff6b6b;
             margin-bottom: 15px;
         }
-
-        .financial-item {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(34, 197, 94, 0.1);
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: between;
-            align-items: center;
+        
+        .faq-answer {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            line-height: 1.7;
         }
-
-        .financial-amount {
-            color: #22c55e;
+        
+        /* Final CTA Section */
+        .final-cta {
+            background: linear-gradient(135deg, #ff416c, #ff4757);
+            padding: 80px 0;
+            border-radius: 20px;
+            margin: 80px 0;
+            text-align: center;
+        }
+        
+        .final-cta h2 {
+            color: #ffffff;
+            margin-bottom: 30px;
+        }
+        
+        .final-cta p {
+            color: #ffffff;
+            font-size: 1.3rem;
             font-weight: 600;
+            margin: 20px 0;
         }
-
-        .financial-description {
-            color: #e5e7eb;
-            font-size: 12px;
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #666;
+            border-top: 1px solid #333;
         }
-
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(15, 23, 35, 0.5);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(34, 197, 94, 0.3);
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(34, 197, 94, 0.5);
-        }
-
-        /* Mobile Responsiveness */
-        @media screen and (max-width: 768px) {
-            body {
-                overflow: auto;
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
             }
-
-            .nav-bar {
-                flex-direction: row;
-                overflow-x: auto;
-                gap: 10px;
-                padding: 10px;
-            }
-
-            .nav-tab {
-                white-space: nowrap;
-                min-width: 80px;
-                font-size: 12px;
-                padding: 6px 12px;
-            }
-
-            .agent-bar {
-                overflow-x: auto;
-                gap: 10px;
-                padding: 10px;
-            }
-
-            .agent-card {
-                min-width: 120px;
-                padding: 10px;
-                flex-shrink: 0;
-            }
-
-            .agent-name {
-                font-size: 14px;
-            }
-
-            .agent-role {
-                font-size: 11px;
-            }
-
-            .agent-task {
-                font-size: 10px;
-            }
-
-            .main-content {
-                flex-direction: column;
-                height: auto;
-            }
-
-            .activity-feed {
-                width: 100%;
-                max-height: 300px;
-                order: 2;
-            }
-
-            .task-board {
-                order: 1;
-                padding: 15px;
-            }
-
-            .kanban-board {
+            
+            .comparison-grid {
                 grid-template-columns: 1fr;
-                gap: 15px;
-                height: auto;
             }
-
-            .kanban-column {
-                max-height: 400px;
-            }
-
-            .board-header {
-                flex-direction: column;
-                gap: 10px;
-                align-items: stretch;
-            }
-
-            .add-task-btn {
-                width: 100%;
-            }
-
-            .financials-content.active {
-                padding: 15px;
-            }
-
-            .financial-grid {
+            
+            .stats-grid {
                 grid-template-columns: 1fr;
-                gap: 15px;
             }
-
-            .financial-section {
-                padding: 15px;
+            
+            .features-grid {
+                grid-template-columns: 1fr;
             }
-        }
-
-        @media screen and (max-width: 480px) {
-            .nav-bar {
-                padding: 8px;
+            
+            .container {
+                padding: 0 15px;
             }
-
-            .nav-tab {
-                font-size: 11px;
-                padding: 5px 8px;
-            }
-
-            .agent-bar {
-                padding: 8px;
-            }
-
-            .agent-card {
-                min-width: 100px;
-                padding: 8px;
-            }
-
-            .task-board, .financials-content {
-                padding: 10px;
-            }
-
-            .board-title {
-                font-size: 16px;
-            }
-
-            .section-header {
-                font-size: 14px;
+            
+            .section h2 {
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <div class="nav-bar">
-        <div class="nav-tab active" onclick="showTab('dashboard')">DASHBOARD</div>
-        <div class="nav-tab" onclick="showTab('financials')">FINANCIALS</div>
-        <div class="nav-tab" onclick="showTab('leads')">LEADS</div>
-        <div class="nav-tab" onclick="showTab('actions')">ACTIONS</div>
-    </div>
-
-    <!-- Agent Status Bar -->
-    <div class="agent-bar">
-        <div class="agent-card active" id="arthur-agent">
-            <div class="agent-header">
-                <div class="agent-status"></div>
-                <div class="agent-name">🎩 ARTHUR</div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <span class="emoji-large">🦞</span>
+            <h1>🔥 Meet Arthur: The AI Operator Who Gets Sh*t Done 🔥</h1>
+            <p class="subtitle">Stop hiring expensive VAs and waiting weeks for simple tasks. Get an AI operator who thinks like a $10M entrepreneur and executes like your best employee in 2025</p>
+            
+            <div class="video-placeholder">
+                <h3>🎬 Watch Arthur Handle 3 Weeks of Work in 3 Minutes</h3>
+                <p>See Arthur build systems, handle customer service, manage operations, and scale businesses while you sleep</p>
             </div>
-            <div class="agent-role">Orchestrator</div>
-            <div class="agent-task">Coordinating Operations</div>
+            
+            <a href="#pricing" class="cta-button">Get Arthur Now - 30-Day Trial</a>
         </div>
-
-        <div class="agent-card" id="marcus-agent">
-            <div class="agent-header">
-                <div class="agent-status"></div>
-                <div class="agent-name">📞 MARCUS</div>
-            </div>
-            <div class="agent-role">CRM (GoHighLevel)</div>
-            <div class="agent-task">Managing Contacts</div>
-        </div>
-
-        <div class="agent-card" id="sage-agent">
-            <div class="agent-header">
-                <div class="agent-status"></div>
-                <div class="agent-name">📋 SAGE</div>
-            </div>
-            <div class="agent-role">Projects (Asana)</div>
-            <div class="agent-task">Tracking Tasks</div>
-        </div>
-
-        <div class="agent-card" id="quant-agent">
-            <div class="agent-header">
-                <div class="agent-status"></div>
-                <div class="agent-name">📈 QUANT</div>
-            </div>
-            <div class="agent-role">Trading & Finance</div>
-            <div class="agent-task">Monitoring Markets</div>
-        </div>
-
-        <div class="agent-card" id="echo-agent">
-            <div class="agent-header">
-                <div class="agent-status"></div>
-                <div class="agent-name">🔊 ECHO</div>
-            </div>
-            <div class="agent-role">Communications</div>
-            <div class="agent-task">Voice & Email Ready</div>
-        </div>
-
-        <div class="agent-card active" id="scout-agent">
-            <div class="agent-header">
-                <div class="agent-status"></div>
-                <div class="agent-name">🔍 SCOUT</div>
-            </div>
-            <div class="agent-role">Research (Apify)</div>
-            <div class="agent-task">Monitoring Detroit Listings</div>
-        </div>
-
-        <div class="agent-card" id="forge-agent">
-            <div class="agent-header">
-                <div class="agent-status"></div>
-                <div class="agent-name">⚙️ FORGE</div>
-            </div>
-            <div class="agent-role">Development</div>
-            <div class="agent-task">Systems Operational</div>
-        </div>
-    </div>
+    </section>
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Dashboard Tab Content -->
-        <div id="dashboard-content">
-            <!-- Live Activity Feed -->
-            <div class="activity-feed">
-                <div class="feed-header">
-                    <span>🔥</span>
-                    LIVE ACTIVITY FEED
-                </div>
-                <div id="activity-list">
-                    <!-- Activity items will be populated here -->
-                </div>
-            </div>
+        <div class="container">
+            
+            <!-- Problem Section -->
+            <section class="section">
+                <h2>Say goodbye to overwhelm, dropped balls, and "I'll get to it later"...</h2>
+                <p>Listen up, entrepreneur...</p>
+                <p>You didn't start a business to spend your nights drowning in emails, chasing down contractors, or manually updating spreadsheets like it's 1995.</p>
+                <p>You started it to be FREE. To build wealth. To create impact.</p>
+                <p>But instead? You're working 70-hour weeks, your personal life is non-existent, and you're one "urgent" Slack message away from a mental breakdown.</p>
+                <p><strong>Here's the brutal truth:</strong> You're not scaling because you're still doing $15/hour work when your brain is worth $1,000/hour.</p>
+            </section>
 
-            <!-- Task Board -->
-            <div class="task-board">
-                <div class="board-header">
-                    <div class="board-title">MISSION CONTROL</div>
-                    <button class="add-task-btn" onclick="addNewTask()">+ NEW TASK</button>
-                </div>
+            <!-- Benefits -->
+            <section class="section">
+                <h3>🎯 Get 40+ hours back per week guaranteed</h3>
+                <p>Look, I'm not going to bullsh*t you with some "revolutionary AI breakthrough" nonsense.</p>
+                <p>Arthur isn't magic. He's just what happens when you take a decade of operations experience from someone who's scaled businesses from zero to 8 figures... and package it into an AI that never sleeps, never complains, and never asks for a raise.</p>
 
-                <div class="kanban-board">
-                    <div class="kanban-column" id="backlog">
-                        <div class="column-header">📋 BACKLOG</div>
-                        <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-                    </div>
+                <h3>💰 Cut your operating costs by 80% instantly</h3>
+                <p>Remember when you thought hiring that $60k/year operations manager would solve everything?</p>
+                <p>How'd that work out?</p>
+                <p>They quit after 6 months, took your processes with them, and left you more burnt out than before.</p>
+                <p>Arthur? He's been handling million-dollar operations for months. No sick days. No drama. No equity demands.</p>
 
-                    <div class="kanban-column" id="in-progress">
-                        <div class="column-header">🚧 IN PROGRESS</div>
-                        <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-                    </div>
+                <h3>🚀 Scale beyond $10M without losing your sanity</h3>
+                <p>What's Arthur's secret weapon?</p>
+                <p>Simple: He's modeled after Luke Fontaine - the guy who's been the "secret weapon" operator behind multiple 8-figure businesses across industries you didn't even know existed.</p>
+            </section>
 
-                    <div class="kanban-column" id="review">
-                        <div class="column-header">👁️ REVIEW</div>
-                        <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-                    </div>
-
-                    <div class="kanban-column" id="done">
-                        <div class="column-header">✅ DONE</div>
-                        <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Financials Tab Content -->
-        <div id="financials-content" class="financials-content">
-            <div class="financial-grid">
-                <div class="financial-section">
-                    <div class="section-header">💳 LIVE CHARGES</div>
-                    <div id="charges-feed">
-                        <!-- Tiller charges will populate here -->
+            <!-- Stats Section -->
+            <section class="stats">
+                <div class="container">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-number">$50M+</span>
+                            <div class="stat-label">Revenue Operated</div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">6</span>
+                            <div class="stat-label">Industries Dominated</div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">1000+</span>
+                            <div class="stat-label">Systems Built</div>
+                        </div>
                     </div>
                 </div>
+            </section>
 
-                <div class="financial-section">
-                    <div class="section-header">💰 REVENUE STREAM</div>
-                    <div id="revenue-feed">
-                        <!-- Revenue items will populate here -->
+            <!-- Luke's Story -->
+            <section class="luke-story">
+                <div class="container">
+                    <h2>Trained by the guy who ACTUALLY scaled the businesses</h2>
+                    <p style="text-align: center; font-size: 1.3rem; margin-bottom: 40px;">See, everyone talks about "entrepreneurial success stories"... But they never mention the operators. The people who actually BUILT the systems that made the magic happen.</p>
+                    <p style="text-align: center; font-size: 1.3rem; margin-bottom: 40px;"><strong>Meet Luke Fontaine:</strong> The operator you've never heard of who was behind:</p>
+                    <ul>
+                        <li><strong>Agency scaling:</strong> 1,000+ clients, worked with Jay Abraham and Tony Robbins extended team</li>
+                        <li><strong>Commercial aviation:</strong> Operational systems for airplane financing (yes, actual Boeing 777s)</li>
+                        <li><strong>Financial advisory:</strong> Built systems that took advisors from first dollar to 7 figures</li>
+                        <li><strong>Business coaching:</strong> Operations behind multiple 7-figure coaching companies</li>
+                        <li><strong>Trading operation:</strong> $7M/month trading company operations</li>
+                        <li><strong>Real estate:</strong> 200+ homes in year 1</li>
+                    </ul>
+                    <p style="text-align: center; font-size: 1.3rem; margin-top: 40px;">Luke's the guy who builds the machine that makes the money. And now? Arthur has his brain.</p>
+                </div>
+            </section>
+
+            <!-- Testimonials -->
+            <section class="testimonials">
+                <h2>📱 Live Results from Real Entrepreneurs</h2>
+                
+                <div class="testimonial">
+                    <p>"Holy sh*t. Arthur just saved me $3,500 in web development costs and got my landing page live in 2 hours instead of 2 weeks. I'm never hiring freelancers again."</p>
+                    <div class="author">- Sarah M., SaaS Founder</div>
+                </div>
+                
+                <div class="testimonial">
+                    <p>"Arthur recovered $1,600 in travel refunds I didn't even know I was owed. Paid for himself in the first week."</p>
+                    <div class="author">- Marcus K., E-commerce</div>
+                </div>
+                
+                <div class="testimonial">
+                    <p>"Built a $300K pipeline through SMS outreach while I slept. This is what I've been looking for for 5 years."</p>
+                    <div class="author">- David L., Real Estate</div>
+                </div>
+            </section>
+
+            <!-- Comparison -->
+            <section class="comparison">
+                <h2>❌ Old Way vs 🔥 Arthur's New Method</h2>
+                <div class="comparison-grid">
+                    <div class="old-way">
+                        <h3>❌ The Old, Broken Way</h3>
+                        <ul>
+                            <li>Hire expensive VAs who need constant babysitting</li>
+                            <li>Wait weeks to find, interview, and train new team members</li>
+                            <li>Watch your "automated" systems break every other Tuesday</li>
+                            <li>Pray your operations manager doesn't quit right before a big launch</li>
+                            <li>Spend more time managing people than growing your business</li>
+                            <li>Constantly worry about what's falling through the cracks</li>
+                        </ul>
+                        <div class="comparison-footer">🔥 BURNED CASH AND WASTED TIME</div>
+                    </div>
+                    
+                    <div class="new-way">
+                        <h3>✅ Arthur's New Method</h3>
+                        <ul>
+                            <li>Get an operator with 10+ years of experience instantly</li>
+                            <li>Deploy battle-tested systems from 8-figure businesses immediately</li>
+                            <li>Launch profitable campaigns in minutes—not months</li>
+                            <li>Scale operations 24/7 without hiring, training, or managing</li>
+                            <li>Never lose sleep over dropped balls or missed opportunities</li>
+                            <li>Focus on CEO work while Arthur handles everything else</li>
+                        </ul>
+                        <div class="comparison-footer">🤑 RECORD-BREAKING MONTHS AND FREEDOM</div>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <!-- 3 Ways Section -->
+            <section class="section">
+                <h2>🎯 3 Ways Arthur Will Instantly 10X Your Operations</h2>
+                
+                <h3>1. Arthur eliminates the "key person" risk that's strangling your growth</h3>
+                <p>You know that sick feeling when your "irreplaceable" team member quits right before a big launch? Arthur never quits. Never gets sick. Never demands equity. Just gets sh*t done 24/7.</p>
+                
+                <h3>2. Arthur instantly deploys systems that took other businesses years to perfect</h3>
+                <p>Why reinvent the wheel? Arthur comes pre-loaded with operational playbooks from businesses that have already scaled to 8-figures. Skip the expensive trial-and-error phase.</p>
+                
+                <h3>3. Arthur spots opportunities and problems before you even know they exist</h3>
+                <p>While you're sleeping, Arthur is monitoring your business, catching issues before they become fires, and identifying profit opportunities you'd miss for months.</p>
+            </section>
+
+            <!-- Guarantee -->
+            <section class="guarantee">
+                <h2>🎯 "I'll Save You 40 Hours This Week" Guarantee</h2>
+                <p><strong>If Arthur doesn't save you at least 40 hours of work in your first week, I'll refund every penny and let you keep the systems he built.</strong></p>
+                <p>That's how confident I am that Arthur will change your life.</p>
+                <p>No fine print. No BS. No "but you have to use it exactly this way" clauses.</p>
+                <p>Either Arthur saves you 40+ hours this week, or you pay nothing.</p>
+            </section>
+
+            <!-- Better Operations -->
+            <section class="section">
+                <h2>🚀 Better Operations. Higher Profits. More Freedom. Less Stress.</h2>
+                <h2>💪 Arthur is 10x better than 99% of Operations Managers</h2>
+            </section>
+
+            <!-- Features -->
+            <section class="features">
+                <div class="container">
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <h4>🧠 Strategic Business Intelligence</h4>
+                            <ul>
+                                <li>Real-time financial monitoring and cash flow optimization</li>
+                                <li>Competitive intelligence and market opportunity identification</li>
+                                <li>Automated performance tracking across all business units</li>
+                                <li>Predictive analytics for scaling decisions</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>⚡ Instant Execution Systems</h4>
+                            <ul>
+                                <li>Email marketing campaigns that actually convert</li>
+                                <li>Sales funnel optimization and A/B testing</li>
+                                <li>Customer service automation that feels human</li>
+                                <li>Supply chain and vendor management</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <h4>🔧 24/7 Technical Operations</h4>
+                            <ul>
+                                <li>Website development and maintenance</li>
+                                <li>API integrations and workflow automation</li>
+                                <li>Data analysis and reporting dashboards</li>
+                                <li>System monitoring and proactive maintenance</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing -->
+            <section id="pricing" class="pricing">
+                <div class="container">
+                    <h2>🔥 Founder Pricing (Limited Time) 🔥</h2>
+                    
+                    <div class="pricing-card">
+                        <div class="price">$297<span style="font-size: 1.5rem;">/month</span></div>
+                        <div class="price-subtitle">(Regular price: $997/month)</div>
+                        
+                        <h3>What you get:</h3>
+                        <ul class="pricing-features">
+                            <li>Full Arthur AI operator access</li>
+                            <li>All pre-built business systems</li>
+                            <li>24/7 monitoring and execution</li>
+                            <li>Priority support and customization</li>
+                            <li>30-day money-back guarantee</li>
+                            <li>Onboarding and strategy session</li>
+                        </ul>
+                        
+                        <a href="#" class="cta-button">Get Arthur Now - Save $700/month</a>
+                        <p style="margin-top: 20px; color: #666; font-style: italic;">*Founder pricing ends when we hit 100 clients</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section class="faq">
+                <h2 style="text-align: center;">🤔 Frequently Asked Questions</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">What exactly can Arthur do for my business?</div>
+                    <div class="faq-answer">Think of Arthur as your most competent operations manager, marketing director, and technical lead rolled into one. He handles email marketing, customer service, financial monitoring, website development, sales funnels, vendor management, and more. Basically, anything that doesn't require you to physically be somewhere.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">How is Arthur different from ChatGPT or other AI tools?</div>
+                    <div class="faq-answer">ChatGPT gives you answers. Arthur takes action. He's connected to your actual business systems and can execute tasks end-to-end. Plus, he's trained on real operational playbooks from 8-figure businesses, not just general knowledge.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">What if Arthur breaks something important?</div>
+                    <div class="faq-answer">Arthur follows strict protocols and asks for approval on any high-risk actions. Plus, all changes are logged and reversible. In 6+ months of operation, we've had zero incidents of Arthur causing business damage.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Do I need to be technical to use Arthur?</div>
+                    <div class="faq-answer">Nope. Arthur handles all the technical stuff. You just tell him what you want accomplished in plain English, and he figures out how to make it happen. No coding, no complex setup, no technical knowledge required.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">How quickly will I see results?</div>
+                    <div class="faq-answer">Most clients see immediate time savings in the first 24 hours. Significant business improvements (better cash flow, increased sales, streamlined operations) typically show up within the first week.</div>
+                </div>
+            </section>
+
+            <!-- Final CTA -->
+            <section class="final-cta">
+                <div class="container">
+                    <h2>🔥 What Are You Waiting For? 🔥</h2>
+                    <h2>Seriously, Yo</h2>
+                    <p>What are you still doing reading at this point?</p>
+                    <p>You know you need this. Your business knows you need this. Hell, your family knows you need this because they never see you anymore.</p>
+                    <p>You can keep doing everything yourself, burning out, and wondering why your business isn't scaling...</p>
+                    <p>Or you can say "f*ck it," get Arthur, and finally run your business like the 8-figure operation it's meant to be.</p>
+                    <p><strong>The choice is yours. But make it fast.</strong></p>
+                    <a href="#pricing" class="cta-button">Get Arthur Now - Start Your 30-Day Trial</a>
+                </div>
+            </section>
+
         </div>
     </div>
 
-    <script>
-        // Global state
-        let tasks = [];
-        let activities = [];
-        let draggedElement = null;
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 Arthur AI. Results may vary. Please gamble responsibly with your business growth.</p>
+        </div>
+    </footer>
 
-        // Navigation
-        function showTab(tabName) {
-            // Remove active class from all tabs and content
-            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('#dashboard-content, #financials-content').forEach(content => {
-                content.style.display = 'none';
-                content.classList.remove('active');
-            });
-
-            // Activate clicked tab
-            event.target.classList.add('active');
-
-            if (tabName === 'dashboard') {
-                document.getElementById('dashboard-content').style.display = 'flex';
-            } else if (tabName === 'financials') {
-                document.getElementById('financials-content').style.display = 'block';
-                document.getElementById('financials-content').classList.add('active');
-                loadFinancialData();
-            }
-        }
-
-        // Agent Management
-        function toggleAgent(agentId, isActive) {
-            const agentCard = document.getElementById(agentId);
-            if (isActive) {
-                agentCard.classList.add('active');
-            } else {
-                agentCard.classList.remove('active');
-            }
-        }
-
-        // Activity Feed
-        function addActivity(type, description) {
-            const activity = {
-                id: Date.now(),
-                type: type,
-                description: description,
-                timestamp: new Date()
-            };
-
-            activities.unshift(activity);
-            renderActivityFeed();
-        }
-
-        function renderActivityFeed() {
-            const activityList = document.getElementById('activity-list');
-            activityList.innerHTML = activities.slice(0, 20).map(activity => `
-                <div class="activity-item">
-                    <div class="activity-header">
-                        <span class="activity-time">${activity.timestamp.toLocaleTimeString()}</span>
-                        <span class="activity-type">${activity.type}</span>
-                    </div>
-                    <div class="activity-description">${activity.description}</div>
-                </div>
-            `).join('');
-        }
-
-        // Task Management
-        function loadTasks() {
-            // This would normally fetch from your board-data.json
-            // For now, let's load some sample tasks
-            tasks = [
-                {
-                    id: 'task-001',
-                    title: 'Detroit Property Monitoring',
-                    description: 'Real-time Zillow scraping for Section 8 listings every 15 min',
-                    column: 'in-progress',
-                    priority: 'high',
-                    assignee: 'Scout'
-                },
-                {
-                    id: 'task-002',
-                    title: 'Agent SMS Outreach',
-                    description: 'Daily outreach to Detroit agents via GHL',
-                    column: 'in-progress',
-                    priority: 'high',
-                    assignee: 'Marcus'
-                },
-                {
-                    id: 'task-003',
-                    title: 'Paper Trading Monitor',
-                    description: 'Crypto positions with momentum & oversold strategies',
-                    column: 'in-progress',
-                    priority: 'medium',
-                    assignee: 'Quant'
-                },
-                {
-                    id: 'task-004',
-                    title: 'Buyers Club Pipeline',
-                    description: 'Track 18 deals in contract, $162K revenue',
-                    column: 'in-progress',
-                    priority: 'high',
-                    assignee: 'Sage'
-                },
-                {
-                    id: 'task-005',
-                    title: 'Status Report System',
-                    description: 'Voice briefings via ElevenLabs TTS',
-                    column: 'done',
-                    priority: 'medium',
-                    assignee: 'Echo'
-                },
-                {
-                    id: 'task-006',
-                    title: 'Agent Architecture Deploy',
-                    description: '7-agent subagent system with SOULs and MEMORYs',
-                    column: 'done',
-                    priority: 'high',
-                    assignee: 'Forge'
-                }
-            ];
-            renderTasks();
-        }
-
-        function renderTasks() {
-            // Clear all columns
-            document.querySelectorAll('.task-list').forEach(list => list.innerHTML = '');
-
-            // Populate tasks
-            tasks.forEach(task => {
-                const taskElement = createTaskElement(task);
-                const column = document.getElementById(task.column)?.querySelector('.task-list');
-                if (column) {
-                    column.appendChild(taskElement);
-                }
-            });
-        }
-
-        function createTaskElement(task) {
-            const taskDiv = document.createElement('div');
-            taskDiv.className = 'task-card';
-            taskDiv.draggable = true;
-            taskDiv.dataset.taskId = task.id;
-            taskDiv.ondragstart = drag;
-
-            const priorityClass = `priority-${task.priority}`;
-
-            taskDiv.innerHTML = `
-                <div class="task-title">${task.title}</div>
-                <div class="task-description">${task.description}</div>
-                <div class="task-meta">
-                    <span class="task-priority ${priorityClass}">${task.priority.toUpperCase()}</span>
-                    <span class="task-assignee">${task.assignee}</span>
-                </div>
-            `;
-
-            taskDiv.onclick = () => openTaskModal(task);
-            return taskDiv;
-        }
-
-        function openTaskModal(task) {
-            alert(`Task: ${task.title}\n\nDescription: ${task.description}\n\nPriority: ${task.priority}\nAssignee: ${task.assignee}`);
-        }
-
-        // Drag and Drop
-        function allowDrop(ev) {
-            ev.preventDefault();
-        }
-
-        function drag(ev) {
-            draggedElement = ev.target;
-            ev.target.classList.add('dragging');
-        }
-
-        function drop(ev) {
-            ev.preventDefault();
-            if (draggedElement) {
-                const column = ev.target.closest('.kanban-column');
-                const taskList = column.querySelector('.task-list');
-                
-                if (taskList) {
-                    taskList.appendChild(draggedElement);
-                    
-                    // Update task column in data
-                    const taskId = draggedElement.dataset.taskId;
-                    const task = tasks.find(t => t.id === taskId);
-                    if (task) {
-                        const oldColumn = task.column;
-                        task.column = column.id;
-                        addActivity('TASK', `Moved "${task.title}" from ${oldColumn.toUpperCase()} to ${task.column.toUpperCase()}`);
-                    }
-                }
-                
-                draggedElement.classList.remove('dragging');
-                draggedElement = null;
-            }
-        }
-
-        function addNewTask() {
-            const title = prompt('Task title:');
-            if (title) {
-                const description = prompt('Task description:') || '';
-                const priority = prompt('Priority (high/medium/low):') || 'medium';
-                const assignee = prompt('Assignee:') || 'Arthur';
-
-                const newTask = {
-                    id: `task-${Date.now()}`,
-                    title: title,
-                    description: description,
-                    column: 'backlog',
-                    priority: priority,
-                    assignee: assignee
-                };
-
-                tasks.push(newTask);
-                renderTasks();
-                addActivity('CREATE', `New task created: "${title}"`);
-            }
-        }
-
-        // Financial Data
-        function loadFinancialData() {
-            // Sample financial data - this would connect to Tiller API
-            const charges = [
-                { amount: '-$87.50', description: 'Uber Ride to Airport', card: 'Chase Sapphire', time: '2:34 PM' },
-                { amount: '-$1,250.00', description: 'Office Rent Payment', card: 'Business Platinum', time: '1:15 PM' },
-                { amount: '-$45.99', description: 'Spotify Premium Family', card: 'Chase Sapphire', time: '12:05 PM' },
-                { amount: '-$2,100.00', description: 'Marketing Campaign', card: 'Business Platinum', time: '10:30 AM' }
-            ];
-
-            const revenue = [
-                { amount: '+$8,500.00', description: 'LL Ventures Deal Close', source: 'Business Account', time: '3:45 PM' },
-                { amount: '+$1,200.00', description: 'Consulting Payment', source: 'Chase Business', time: '11:20 AM' },
-                { amount: '+$850.00', description: 'Investment Dividend', source: 'Schwab Account', time: '9:15 AM' }
-            ];
-
-            renderFinancialData(charges, revenue);
-        }
-
-        function renderFinancialData(charges, revenue) {
-            const chargesFeed = document.getElementById('charges-feed');
-            const revenueFeed = document.getElementById('revenue-feed');
-
-            chargesFeed.innerHTML = charges.map(charge => `
-                <div class="financial-item">
-                    <div>
-                        <div class="financial-amount" style="color: #ef4444;">${charge.amount}</div>
-                        <div class="financial-description">${charge.description}</div>
-                        <div class="financial-description">${charge.card} • ${charge.time}</div>
-                    </div>
-                </div>
-            `).join('');
-
-            revenueFeed.innerHTML = revenue.map(rev => `
-                <div class="financial-item">
-                    <div>
-                        <div class="financial-amount">${rev.amount}</div>
-                        <div class="financial-description">${rev.description}</div>
-                        <div class="financial-description">${rev.source} • ${rev.time}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Agent Proactive Features
-        function simulateAgentActivity() {
-            const activities = [
-                { agent: 'arthur-agent', type: 'COORD', desc: 'Routing task to specialist agent' },
-                { agent: 'marcus-agent', type: 'CRM', desc: 'Checking GHL for new responses' },
-                { agent: 'sage-agent', type: 'TASK', desc: 'Updated Asana project status' },
-                { agent: 'quant-agent', type: 'TRADE', desc: 'Paper portfolio +2.8% today' },
-                { agent: 'echo-agent', type: 'VOICE', desc: 'Status report ready to deliver' },
-                { agent: 'scout-agent', type: 'SCRAPE', desc: 'Found 3 new Detroit listings' },
-                { agent: 'forge-agent', type: 'DEV', desc: 'All automations running smoothly' }
-            ];
-
-            setInterval(() => {
-                const activity = activities[Math.floor(Math.random() * activities.length)];
-                addActivity(activity.type, activity.desc);
-                
-                // Randomly activate agents
-                if (Math.random() > 0.7) {
-                    toggleAgent(activity.agent, true);
-                    setTimeout(() => toggleAgent(activity.agent, false), 3000);
-                }
-            }, 15000);
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            loadTasks();
-            addActivity('SYSTEM', 'Arthur Command Center v2 initialized');
-            addActivity('COORD', '7 agents online: Arthur, Marcus, Sage, Quant, Echo, Scout, Forge');
-            addActivity('SCOUT', 'Detroit monitoring active (every 15 min)');
-            addActivity('MARCUS', 'GHL connected (1,608 contacts)');
-            simulateAgentActivity();
-        });
-    </script>
 </body>
 </html>
